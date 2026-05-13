@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>FarmConnect</title>
+
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #f5fff4;
+    color: #1f3d1f;
+    overflow-x: hidden;
+  }
+
+  header {
+    width: 100%;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    animation: slideDown 0.9s ease;
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f8f3a;
+    animation: glowText 2s infinite alternate;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #1f3d1f;
+    margin-left: 25px;
+    font-weight: 600;
+    position: relative;
+    transition: 0.3s;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 3px;
+    background: #1f8f3a;
+    left: 0;
+    bottom: -7px;
+    transition: 0.3s;
+    border-radius: 10px;
+  }
+
+  nav a:hover {
+    color: #1f8f3a;
+  }
+
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  .hero {
+    min-height: 100vh;
+    padding: 130px 8% 60px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    gap: 40px;
+    background: linear-gradient(120deg, #eaffea, #fff7d6, #d9ffd9);
+    background-size: 300% 300%;
+    animation: gradientMove 6s ease infinite;
+  }
+
+  .hero-content {
+    animation: slideLeft 1.2s ease;
+  }
+
+  .hero-content h1 {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+
+  .hero-content h1 span {
+    color: #1f8f3a;
+  }
+
+  .hero-content p {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    color: #4c654c;
+    animation: fadeUp 1.4s ease;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 30px;
+    background: #1f8f3a;
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px rgba(31, 143, 58, 0.35);
+    animation: pulseBtn 2s infinite;
+  }
+
+  .btn:hover {
+    background: #156b2a;
+    transform: translateY(-6px) scale(1.05);
+  }
+
+  .hero-card {
+    background: white;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+    animation: slideRight 1.2s ease, floatCard 3s ease-in-out infinite alternate;
+  }
+
+  .hero-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: 0.5s;
+  }
+
+  .hero-card img:hover {
+    transform: scale(1.04);
+  }
+
+  section {
+    padding: 80px 8%;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 50px;
+    color: #1f8f3a;
+    animation: fadeUp 1s ease;
+  }
+
+  .features,
+  .products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .box,
+  .product-card {
+    background: white;
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    transition: 0.4s;
+    animation: fadeUp 1s ease both;
+  }
+
+  .box:hover,
+  .product-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 25px 55px rgba(31, 143, 58, 0.25);
+  }
+
+  .box h3 {
+    margin-bottom: 15px;
+    color: #1f8f3a;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    transition: 0.5s;
+  }
+
+  .product-card img:hover {
+    transform: scale(1.06);
+  }
+
+  .price {
+    color: #1f8f3a;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 12px 0;
+  }
+
+  .small-btn {
+    padding: 12px 22px;
+    border: none;
+    background: #ffd44d;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .small-btn:hover {
+    background: #1f8f3a;
+    color: white;
+    transform: scale(1.08);
+  }
+
+  .cart-preview {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: fadeUp 1s ease;
+  }
+
+  .cart-preview:hover {
+    transform: translateY(-8px);
+    transition: 0.4s;
+  }
+
+  .cart-preview img {
+    width: 45%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 25px;
+    transition: 0.5s;
+  }
+
+  .cart-preview img:hover {
+    transform: scale(1.04);
+  }
+
+  .cart-content h3 {
+    font-size: 38px;
+    margin-bottom: 20px;
+    color: #1f8f3a;
+  }
+
+  .cart-content p {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    color: #526652;
+  }
+
+  .cart-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background: #1f8f3a;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .cart-btn:hover {
+    background: #156b2a;
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  footer {
+    text-align: center;
+    padding: 25px;
+    background: #143514;
+    color: white;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-70px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-80px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(80px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes floatCard {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-18px);
+    }
+  }
+
+  @keyframes pulseBtn {
+    0% {
+      box-shadow: 0 0 0 rgba(31, 143, 58, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(31, 143, 58, 0.6);
+    }
+    100% {
+      box-shadow: 0 0 0 rgba(31, 143, 58, 0.4);
+    }
+  }
+
+  @keyframes glowText {
+    from {
+      text-shadow: 0 0 5px rgba(31, 143, 58, 0.2);
+    }
+    to {
+      text-shadow: 0 0 18px rgba(31, 143, 58, 0.6);
+    }
+  }
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @media(max-width:900px) {
+    .hero,
+    .cart-preview {
+      grid-template-columns: 1fr;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .features,
+    .products {
+      grid-template-columns: 1fr;
+    }
+
+    .cart-preview img {
+      width: 100%;
+    }
+
+    nav {
+      display: none;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">FarmConnect</div>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#products">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+
+    <div class="hero-content">
+      <h1>Direct <span>Farmer</span> To Consumer Marketplace</h1>
+
+      <p>
+        Buy fresh vegetables, fruits and grains directly from farmers.
+      </p>
+
+      <a href="#products" class="btn">
+        Explore Products
+      </a>
+    </div>
+
+    <div class="hero-card">
+      <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80">
+
+      <h3 style="margin-top:20px;">
+        Fresh From Farm 🚜
+      </h3>
+    </div>
+
+  </section>
+
+  <section id="features">
+
+    <h2 class="section-title">
+      Why Choose FarmConnect?
+    </h2>
+
+    <div class="features">
+
+      <div class="box">
+        <h3>🌾 Direct Farmer Selling</h3>
+        <p>Farmers earn better profit without middlemen.</p>
+      </div>
+
+      <div class="box">
+        <h3>🥦 Fresh Products</h3>
+        <p>Customers get fresh products directly from farms.</p>
+      </div>
+
+      <div class="box">
+        <h3>💰 Fair Pricing</h3>
+        <p>Better pricing for both farmers and customers.</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="products">
+
+    <h2 class="section-title">
+      Fresh Marketplace
+    </h2>
+
+    <div class="products" id="productContainer"></div>
+
+  </section>
+
+  <section id="cart">
+
+    <h2 class="section-title">
+      Shopping Cart
+    </h2>
+
+    <div class="cart-preview">
+
+      <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80">
+
+      <div class="cart-content">
+
+        <h3>Your Fresh Products Await 🛒</h3>
+
+        <p>
+          View all selected products and continue checkout.
+        </p>
+
+        <a href="cart.html" class="cart-btn">
+          Open Cart
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    <p>
+      © 2026 FarmConnect | Direct Farmer Marketplace
+    </p>
+  </footer>
+
+  <script>
+
+    async function loadProducts() {
+
+      try {
+
+        const response = await fetch("http://localhost:5000/api/products");
+
+        const products = await response.json();
+
+        const container = document.getElementById("productContainer");
+
+        container.innerHTML = "";
+
+        products.forEach((product) => {
+
+          container.innerHTML += `
+
+            <div class="product-card">
+
+              <img src="${product.imageUrl}" />  
+
+              <h3>${product.productName}</h3>
+
+              <p>Sold by: ${product.farmerName}</p>
+
+              <p>Location: ${product.location}</p>
+
+              <p>Quantity: ${product.quantity}</p>
+
+              <div class="price">₹${product.price}</div>
+
+              <button 
+                class="small-btn"
+                onclick="addToCart(
+                  '${product._id}',
+                  '${product.productName}',
+                  ${product.price},
+                  '${product.imageUrl}'
+                )"
+              >
+                Add To Cart
+              </button>
+
+            </div>
+
+          `;
+        });
+
+      }
+
+      catch (error) {
+
+        console.log(error);
+
+      }
+
+    }
+
+    function addToCart(id, name, price, image) {
+
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      cart.push({
+        id: id,
+        name: name,
+        price: price,
+        image: image
+      });
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      alert(name + " added to cart");
+
+    }
+
+    loadProducts();
+
+  </script>
+
+</body>
+
+</html>

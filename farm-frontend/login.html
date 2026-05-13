@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FarmConnect Login</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:
+      linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+      url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80');
+      background-size:cover;
+      background-position:center;
+      overflow:hidden;
+    }
+
+    .login-container{
+      width:380px;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(15px);
+      border:1px solid rgba(255,255,255,0.2);
+      padding:40px;
+      border-radius:30px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.3);
+      animation:fadeUp 1s ease;
+    }
+
+    .login-container h1{
+      color:white;
+      text-align:center;
+      margin-bottom:30px;
+      font-size:38px;
+    }
+
+    .login-container input{
+      width:100%;
+      padding:15px;
+      margin-bottom:18px;
+      border:none;
+      border-radius:14px;
+      outline:none;
+      background:rgba(255,255,255,0.18);
+      color:white;
+      font-size:16px;
+    }
+
+    .login-container input::placeholder{
+      color:#ddd;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      background:#1f8f3a;
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+      margin-bottom:15px;
+    }
+
+    .btn:hover{
+      transform:translateY(-3px);
+      background:#156b2a;
+      box-shadow:0 10px 25px rgba(31,143,58,0.4);
+    }
+
+    #loginMessage{
+      text-align:center;
+      color:white;
+      margin-top:10px;
+      font-weight:bold;
+    }
+
+    .back-btn{
+      display:block;
+      text-align:center;
+      color:white;
+      text-decoration:none;
+      margin-top:20px;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(50px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <h1>FarmConnect</h1>
+
+    <input id="phone" type="text" placeholder="Enter Mobile Number">
+
+
+<input id="otp" type="text" placeholder="Enter OTP">
+
+<button onclick="handleOtp()" class="btn" id="otpBtn">
+  Send OTP
+</button>
+
+<p id="loginMessage"></p>
+
+    <p id="loginMessage"></p>
+
+    <a href="index.html" class="back-btn">
+      ← Back To Home
+    </a>
+
+  </div>
+  
+<script>
+  let otpSent = false;
+
+  async function handleOtp() {
+
+    const btn = document.getElementById("otpBtn");
+
+    btn.innerText = "Processing...";
+    btn.disabled = true;
+
+    const phone = document.getElementById("phone").value;
+    const otp = document.getElementById("otp").value;
+
+    try {
+
+      if (!otpSent) {
+
+        const res = await fetch("http://localhost:5000/api/send-otp", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({ phone })
+        });
+
+        const data = await res.json();
+
+        document.getElementById("loginMessage").innerText = data.message;
+
+        otpSent = true;
+
+        btn.innerText = "Verify OTP";
+      }
+
+      else {
+
+        const res = await fetch("http://localhost:5000/api/verify-otp", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({ phone, otp })
+        });
+
+        const data = await res.json();
+
+        document.getElementById("loginMessage").innerText = data.message;
+
+        btn.innerText = "Verify OTP";
+
+        if (data.message === "Login successful") {
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1500);
+        }
+      }
+
+    }
+
+    catch (error) {
+      document.getElementById("loginMessage").innerText = "Something went wrong";
+    }
+
+    btn.disabled = false;
+  }
+</script>
+
+</body>
+</html>
