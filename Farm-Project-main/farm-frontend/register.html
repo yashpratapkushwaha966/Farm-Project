@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmConnect Register</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .register-box h2 {
+      text-align: center;
+      color: #1b5e20;
+      margin-bottom: 8px;
+    }
+
+    .register-box p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #333;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #2e7d32;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      background: #2e7d32;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1b5e20;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="register-box">
+    <h2>FarmConnect</h2>
+    <p>Create your account</p>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter full name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="phone" placeholder="Enter phone number" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="Enter email" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+      </div>
+
+      <div class="form-group">
+        <label>User Type</label>
+        <select id="userType">
+          <option value="customer">Customer</option>
+          <option value="farmer">Farmer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="location" placeholder="Enter location" />
+      </div>
+
+      <button type="submit">Register</button>
+
+      <div id="message"></div>
+    </form>
+  </div>
+
+  <script>
+    // const API_URL = "http://localhost:5000";
+    const API_URL = "https://farm-project-7ii2.onrender.com";
+
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const userData = {
+        fullName: document.getElementById("fullName").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        userType: document.getElementById("userType").value,
+        location: document.getElementById("location").value,
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/api/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+  message.className = "success";
+  message.innerText = "Registration Successful";
+
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 1500);
+} else {
+          message.className = "error";
+          message.innerText = data.message;
+        }
+      } catch (error) {
+        message.className = "error";
+        message.innerText = "Server not connected";
+      }
+    });
+  </script>
+</body>
+</html>
