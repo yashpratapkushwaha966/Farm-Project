@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Product - FarmConnect</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#e8f5e9,#f1f8e9);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:550px;
+background:#fff;
+padding:30px;
+border-radius:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.15);
+animation:fadeIn .8s ease;
+}
+
+h2{
+text-align:center;
+color:#2e7d32;
+margin-bottom:20px;
+}
+
+.form-group{
+margin-bottom:15px;
+}
+
+label{
+display:block;
+margin-bottom:5px;
+font-weight:bold;
+color:#333;
+}
+
+input,
+select{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:15px;
+}
+
+input:focus,
+select:focus{
+outline:none;
+border-color:#2e7d32;
+}
+
+button{
+width:100%;
+padding:14px;
+background:#2e7d32;
+color:white;
+border:none;
+border-radius:12px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#1b5e20;
+transform:translateY(-2px);
+}
+
+#message{
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+}
+
+.success{
+color:green;
+}
+
+.error{
+color:red;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Add Product 🌾</h2>
+
+<form id="productForm">
+
+<div class="form-group">
+<label>Farmer Name</label>
+<input type="text" id="farmerName" required>
+</div>
+
+<div class="form-group">
+<label>Product Name</label>
+<input type="text" id="productName" required>
+</div>
+
+<div class="form-group">
+<label>Category</label>
+<select id="category">
+<option>Fruits</option>
+<option>Vegetables</option>
+<option>Grains</option>
+<option>Dairy</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Price</label>
+<input type="number" id="price" required>
+</div>
+
+<div class="form-group">
+<label>Quantity</label>
+<input type="text" id="quantity" required>
+</div>
+
+<div class="form-group">
+<label>Location</label>
+<input type="text" id="location" required>
+</div>
+
+<div class="form-group">
+<label>Image URL</label>
+<input type="text" id="imageUrl" required>
+</div>
+
+<button type="submit">
+Add Product
+</button>
+
+<div id="message"></div>
+
+</form>
+
+</div>
+
+<script>
+
+const API_URL = "https://farm-project-7ii2.onrender.com";
+
+const form = document.getElementById("productForm");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", async (e) => {
+
+e.preventDefault();
+
+const productData = {
+
+farmerName:
+document.getElementById("farmerName").value,
+
+productName:
+document.getElementById("productName").value,
+
+category:
+document.getElementById("category").value,
+
+price:
+document.getElementById("price").value,
+
+quantity:
+document.getElementById("quantity").value,
+
+location:
+document.getElementById("location").value,
+
+imageUrl:
+document.getElementById("imageUrl").value
+
+};
+
+try{
+
+const response = await fetch(
+`${API_URL}/api/products`,
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(productData)
+}
+);
+
+const data = await response.json();
+
+if(response.ok){
+
+message.className="success";
+message.innerText="✅ Product Added Successfully";
+
+form.reset();
+
+setTimeout(()=>{
+window.location.href="index.html";
+},1500);
+
+}
+else{
+
+message.className="error";
+message.innerText=data.message;
+
+}
+
+}catch(error){
+
+message.className="error";
+message.innerText="❌ Server Error";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
